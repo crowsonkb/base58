@@ -45,7 +45,7 @@ func EncodeInt(src *big.Int) []byte {
 	return bufReverse
 }
 
-func DecodeBytes(src []byte) ([]byte, error) {
+func Decode(src []byte) ([]byte, error) {
 	var leadingOnes int
 	for i := 0; i < len(src) && src[i] == '1'; i++ {
 		leadingOnes++
@@ -60,7 +60,7 @@ func DecodeBytes(src []byte) ([]byte, error) {
 	return paddedBuf, nil
 }
 
-func EncodeBytes(src []byte) []byte {
+func Encode(src []byte) []byte {
 	var leadingZeros int
 	for i := 0; i < len(src) && src[i] == 0; i++ {
 		leadingZeros++
