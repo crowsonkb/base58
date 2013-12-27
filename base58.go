@@ -56,7 +56,7 @@ func Decode(src []byte) ([]byte, error) {
 	for i := 0; i < len(src) && src[i] == '1'; i++ {
 		zeros++
 	}
-	n, err := DecodeInt(src[zeros:])
+	n, err := DecodeInt(src)
 	if err != nil {
 		return nil, err
 	}
