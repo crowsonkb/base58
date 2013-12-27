@@ -86,3 +86,11 @@ func TestDecodeBad(t *testing.T) {
 		t.Fatalf("result = %v, want %v", result, out)
 	}
 }
+
+func TestMaxEncodedLen(t *testing.T) {
+	in, out := 8, 11
+	result := MaxEncodedLen(in)
+	if result != out {
+		t.Fatalf("result = %v, want %v", result, out)
+	}
+}
