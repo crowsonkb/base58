@@ -1,7 +1,7 @@
 package base58
 
 import (
-	"errors"
+	"fmt"
 	"math/big"
 )
 
@@ -18,13 +18,19 @@ func init() {
 	}
 }
 
+type CorruptInputError int64
+
+func (err CorruptInputError) Error() string {
+	return fmt.Sprintf("illegal base58 data at input byte %d", err)
+}
+
 func DecodeInt(src []byte) (*big.Int, error) {
 	n := new(big.Int)
-	for _, digit := range src {
+	for index, digit := range src {
 		n.Mul(n, baseBig)
 		value, ok := invDict[digit]
 		if !ok {
-			return nil, errors.New("invalid character")
+			return nil, CorruptInputError(index)
 		}
 		n.Add(n, value)
 	}
