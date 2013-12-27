@@ -52,32 +52,32 @@ func EncodeInt(src *big.Int) []byte {
 }
 
 func Decode(src []byte) ([]byte, error) {
-	var leadingOnes int
+	var zeros int
 	for i := 0; i < len(src) && src[i] == '1'; i++ {
-		leadingOnes++
+		zeros++
 	}
-	n, err := DecodeInt(src[leadingOnes:])
+	n, err := DecodeInt(src[zeros:])
 	if err != nil {
 		return nil, err
 	}
 	buf := n.Bytes()
-	paddedBuf := make([]byte, len(buf)+leadingOnes)
-	copy(paddedBuf[leadingOnes:], buf)
-	return paddedBuf, nil
+	bufPadded := make([]byte, len(buf)+zeros)
+	copy(bufPadded[zeros:], buf)
+	return bufPadded, nil
 }
 
 func Encode(src []byte) []byte {
-	var leadingZeros int
+	var zeros int
 	for i := 0; i < len(src) && src[i] == 0; i++ {
-		leadingZeros++
+		zeros++
 	}
 	n := new(big.Int)
-	n.SetBytes(src[leadingZeros:])
+	n.SetBytes(src[zeros:])
 	buf := EncodeInt(n)
-	paddedBuf := make([]byte, len(buf)+leadingZeros)
-	for i := 0; i < leadingZeros; i++ {
-		paddedBuf[i] = '1'
+	bufPadded := make([]byte, len(buf)+zeros)
+	for i := 0; i < zeros; i++ {
+		bufPadded[i] = '1'
 	}
-	copy(paddedBuf[leadingZeros:], buf)
-	return paddedBuf
+	copy(bufPadded[zeros:], buf)
+	return bufPadded
 }
