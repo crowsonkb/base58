@@ -9,11 +9,11 @@ import (
 const Base = 58
 
 var baseBig = big.NewInt(Base)
-var Dict = []byte("123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz")
-var invDict map[byte]*big.Int
+var Dict = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+var invDict map[rune]*big.Int
 
 func init() {
-	invDict = make(map[byte]*big.Int)
+	invDict = make(map[rune]*big.Int)
 	for index, value := range Dict {
 		invDict[value] = big.NewInt(int64(index))
 	}
@@ -25,7 +25,7 @@ func (err CorruptInputError) Error() string {
 	return fmt.Sprintf("illegal base58 data at input byte %d", err)
 }
 
-func DecodeInt(src []byte) (*big.Int, error) {
+func DecodeInt(src string) (*big.Int, error) {
 	n := new(big.Int)
 	for index, digit := range src {
 		n.Mul(n, baseBig)
@@ -38,7 +38,7 @@ func DecodeInt(src []byte) (*big.Int, error) {
 	return n, nil
 }
 
-func EncodeInt(src *big.Int) []byte {
+func EncodeInt(src *big.Int) string {
 	buf := make([]byte, 0)
 	remainder := new(big.Int)
 	for src.Sign() == 1 {
@@ -49,12 +49,12 @@ func EncodeInt(src *big.Int) []byte {
 	for index, value := range buf {
 		bufReverse[len(buf)-index-1] = value
 	}
-	return bufReverse
+	return string(bufReverse)
 }
 
-func Decode(src []byte) ([]byte, error) {
+func Decode(src string) ([]byte, error) {
 	var zeros int
-	for i := 0; i < len(src) && src[i] == '1'; i++ {
+	for i := 0; i < len(src) && src[i] == Dict[0]; i++ {
 		zeros++
 	}
 	n, err := DecodeInt(src)
@@ -67,7 +67,7 @@ func Decode(src []byte) ([]byte, error) {
 	return bufPadded, nil
 }
 
-func Encode(src []byte) []byte {
+func Encode(src []byte) string {
 	var zeros int
 	for i := 0; i < len(src) && src[i] == 0; i++ {
 		zeros++
@@ -77,8 +77,8 @@ func Encode(src []byte) []byte {
 	buf := EncodeInt(n)
 	bufPadded := make([]byte, len(buf)+zeros)
 	for i := 0; i < zeros; i++ {
-		bufPadded[i] = '1'
+		bufPadded[i] = Dict[0]
 	}
 	copy(bufPadded[zeros:], buf)
-	return bufPadded
+	return string(bufPadded)
 }

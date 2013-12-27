@@ -15,16 +15,16 @@ func TestEncodeInt(t *testing.T) {
 }
 
 func TestEncodeIntZero(t *testing.T) {
-	in, out := new(big.Int), []byte{}
+	in, out := new(big.Int), ""
 	result := EncodeInt(in)
-	if !bytes.Equal(result, out) {
+	if result != out {
 		t.Errorf("result = %v, want %v", result, out)
 	}
 }
 
 func TestDecodeInt(t *testing.T) {
 	in, out := "432", big.NewInt(3*58*58+2*58+1)
-	result, err := DecodeInt([]byte(in))
+	result, err := DecodeInt(in)
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
@@ -35,7 +35,7 @@ func TestDecodeInt(t *testing.T) {
 
 func TestDecodeIntZero(t *testing.T) {
 	in, out := "", new(big.Int)
-	result, err := DecodeInt([]byte(in))
+	result, err := DecodeInt(in)
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
@@ -46,7 +46,7 @@ func TestDecodeIntZero(t *testing.T) {
 
 func TestDecodeIntBad(t *testing.T) {
 	in, out := "43=2", 2
-	_, err := DecodeInt([]byte(in))
+	_, err := DecodeInt(in)
 	result, ok := err.(CorruptInputError)
 	if !ok {
 		t.Fatalf("Error %v is not a CorruptInputError", err)
@@ -66,7 +66,7 @@ func TestEncode(t *testing.T) {
 
 func TestDecode(t *testing.T) {
 	in, out := "11121", []byte{0, 0, 0, 58}
-	result, err := Decode([]byte(in))
+	result, err := Decode(in)
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
@@ -77,7 +77,7 @@ func TestDecode(t *testing.T) {
 
 func TestDecodeBad(t *testing.T) {
 	in, out := "111=1", 3
-	_, err := Decode([]byte(in))
+	_, err := Decode(in)
 	result, ok := err.(CorruptInputError)
 	if !ok {
 		t.Fatalf("Error %v is not a CorruptInputError", err)
