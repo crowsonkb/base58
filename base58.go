@@ -7,9 +7,9 @@ import (
 )
 
 const Base = 58
+const Dict = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 
 var baseBig = big.NewInt(Base)
-var Dict = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 var invDict map[rune]*big.Int
 
 func init() {
