@@ -13,7 +13,7 @@ const Alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 // The radix of the base58 encoding system.
 const Radix = 58
 
-// Bits of entropy per digit, in base 58.
+// Bits of entropy per base 58 digit.
 var BitsPerDigit = math.Log2(Radix)
 
 var invAlphabet map[rune]*big.Int
