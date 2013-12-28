@@ -61,7 +61,7 @@ func Decode(s string) ([]byte, error) {
 
 // EncodeInt encodes the big.Int n using base58.
 func EncodeInt(n *big.Int) string {
-	buf := make([]byte, 0)
+	buf := make([]byte, 0, MaxEncodedLen(n.BitLen()))
 	remainder := new(big.Int)
 	for n.Sign() == 1 {
 		n.DivMod(n, radixBig, remainder)
