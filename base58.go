@@ -56,10 +56,7 @@ func Decode(s string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	buf := n.Bytes()
-	bufPadded := make([]byte, len(buf)+zeros)
-	copy(bufPadded[zeros:], buf)
-	return bufPadded, nil
+	return append(make([]byte, zeros), n.Bytes()...), nil
 }
 
 // EncodeInt encodes the big.Int n using base58.
@@ -83,15 +80,12 @@ func Encode(src []byte) string {
 	for i := 0; i < len(src) && src[i] == 0; i++ {
 		zeros++
 	}
-	n := new(big.Int)
-	n.SetBytes(src[zeros:])
-	buf := EncodeInt(n)
-	bufPadded := make([]byte, len(buf)+zeros)
+	n := new(big.Int).SetBytes(src[zeros:])
+	buf := append(make([]byte, zeros), EncodeInt(n)...)
 	for i := 0; i < zeros; i++ {
-		bufPadded[i] = Alphabet[0]
+		buf[i] = Alphabet[0]
 	}
-	copy(bufPadded[zeros:], buf)
-	return string(bufPadded)
+	return string(buf)
 }
 
 // MaxEncodedLen returns the maximum length of an encoding of n source bits.
