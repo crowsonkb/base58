@@ -7,7 +7,7 @@ import (
 )
 
 func TestEncodeInt(t *testing.T) {
-	in, out := big.NewInt(3*58*58+2*58+1), "432"
+	in, out := big.NewInt((3*58*58)+(2*58)+1), "432"
 	result := string(EncodeInt(in))
 	if result != out {
 		t.Errorf("result = %v, want %v", result, out)
@@ -23,7 +23,7 @@ func TestEncodeIntZero(t *testing.T) {
 }
 
 func TestDecodeInt(t *testing.T) {
-	in, out := "432", big.NewInt(3*58*58+2*58+1)
+	in, out := "432", big.NewInt((3*58*58)+(2*58)+1)
 	result, err := DecodeInt(in)
 	if err != nil {
 		t.Fatalf(err.Error())
