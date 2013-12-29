@@ -7,10 +7,14 @@ import (
 )
 
 func TestEncodeInt(t *testing.T) {
-	in, out := big.NewInt((3*58*58)+(2*58)+1), "432"
-	result := string(EncodeInt(in))
+	in, out := int64((3*58*58)+(2*58)+1), "432"
+	n := big.NewInt(in)
+	result := EncodeInt(n)
 	if result != out {
-		t.Errorf("result = %v, want %v", result, out)
+		t.Fatalf("result = %v, want %v", result, out)
+	}
+	if n.Int64() != in {
+		t.Fatalf("input was altered")
 	}
 }
 
@@ -18,7 +22,7 @@ func TestEncodeIntZero(t *testing.T) {
 	in, out := new(big.Int), ""
 	result := EncodeInt(in)
 	if result != out {
-		t.Errorf("result = %v, want %v", result, out)
+		t.Fatalf("result = %v, want %v", result, out)
 	}
 }
 
@@ -58,7 +62,7 @@ func TestDecodeIntBad(t *testing.T) {
 
 func TestEncode(t *testing.T) {
 	in, out := []byte{0, 0, 0, 58}, "11121"
-	result := string(Encode(in))
+	result := Encode(in)
 	if result != out {
 		t.Fatalf("result = %v, want %v", result, out)
 	}

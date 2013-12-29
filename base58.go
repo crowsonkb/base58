@@ -20,13 +20,13 @@ var invAlphabet map[rune]*big.Int
 var radixBig = big.NewInt(Radix)
 
 func init() {
-	invAlphabet = make(map[rune]*big.Int)
+	invAlphabet = make(map[rune]*big.Int, Radix)
 	for index, value := range Alphabet {
 		invAlphabet[value] = big.NewInt(int64(index))
 	}
 }
 
-type CorruptInputError int64
+type CorruptInputError int
 
 func (err CorruptInputError) Error() string {
 	return fmt.Sprintf("illegal base58 data at input byte %d", err)
@@ -61,6 +61,7 @@ func Decode(s string) ([]byte, error) {
 
 // EncodeInt encodes the big.Int n using base58.
 func EncodeInt(n *big.Int) string {
+	n = new(big.Int).Set(n)
 	buf := make([]byte, 0, MaxEncodedLen(n.BitLen()))
 	remainder := new(big.Int)
 	for n.Sign() == 1 {
