@@ -11,13 +11,13 @@ import (
 const Alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
 
 // The radix of the base58 encoding system.
-const Radix = 58
+const Radix = len(Alphabet)
 
 // Bits of entropy per base 58 digit.
-var BitsPerDigit = math.Log2(Radix)
+var BitsPerDigit = math.Log2(float64(Radix))
 
 var invAlphabet map[rune]*big.Int
-var radixBig = big.NewInt(Radix)
+var radixBig = big.NewInt(int64(Radix))
 
 func init() {
 	invAlphabet = make(map[rune]*big.Int, Radix)
