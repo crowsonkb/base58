@@ -1,3 +1,4 @@
+// base58 encodes and decodes base58 data (as used in Bitcoin addresses).
 package main
 
 import (
@@ -14,11 +15,11 @@ import (
 )
 
 var usageMessage = `
-With no options, base58 reads raw data from stdin and writes encoded data to
-stdout.`[1:]
+base58 encodes and decodes base58 data (as used in Bitcoin addresses). With no
+options, base58 reads raw data from stdin and writes encoded data to stdout.`
 
 func usage() {
-	fmt.Fprintln(os.Stderr, usageMessage)
+	fmt.Fprintln(os.Stderr, usageMessage[1:])
 	fmt.Fprintln(os.Stderr, "Usage of base58:")
 	flag.PrintDefaults()
 }
