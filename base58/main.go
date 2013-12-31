@@ -1,4 +1,6 @@
-// base58 encodes and decodes base58 data (as used in Bitcoin addresses).
+// The base58 command-line tool encodes and decodes base58 data (as used in
+// Bitcoin addresses). base58 can also compute base58-encoded message digests
+// using md5, sha1, sha256, or sha512.
 package main
 
 import (
