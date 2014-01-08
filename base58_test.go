@@ -49,13 +49,13 @@ func TestDecodeIntZero(t *testing.T) {
 }
 
 func TestDecodeIntBad(t *testing.T) {
-	in, out := "43=2", 2
+	in, out := "43=2", CorruptInputError(2)
 	_, err := DecodeInt(in)
 	result, ok := err.(CorruptInputError)
 	if !ok {
 		t.Fatalf("Error %v is not a CorruptInputError", err)
 	}
-	if result != 2 {
+	if result != out {
 		t.Fatalf("result = %v, want %v", result, out)
 	}
 }
@@ -80,13 +80,13 @@ func TestDecode(t *testing.T) {
 }
 
 func TestDecodeBad(t *testing.T) {
-	in, out := "111=1", 3
+	in, out := "111=1", CorruptInputError(3)
 	_, err := Decode(in)
 	result, ok := err.(CorruptInputError)
 	if !ok {
 		t.Fatalf("Error %v is not a CorruptInputError", err)
 	}
-	if result != 3 {
+	if result != out {
 		t.Fatalf("result = %v, want %v", result, out)
 	}
 }
