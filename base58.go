@@ -89,7 +89,8 @@ func Encode(src []byte) string {
 	return string(buf)
 }
 
-// MaxEncodedLen returns the maximum length of an encoding of n source bits.
+// MaxEncodedLen returns the maximum length in bytes of an encoding of n source
+// bits.
 func MaxEncodedLen(n int) int {
 	return int(math.Ceil(float64(n) / BitsPerDigit))
 }
