@@ -16,12 +16,12 @@ const Radix = len(Alphabet)
 // Bits of entropy per base 58 digit.
 var BitsPerDigit = math.Log2(float64(Radix))
 
-var invAlphabet map[rune]*big.Int
+var invAlphabet map[byte]*big.Int
 var radixBig = big.NewInt(int64(Radix))
 
 func init() {
-	invAlphabet = make(map[rune]*big.Int, Radix)
-	for index, value := range Alphabet {
+	invAlphabet = make(map[byte]*big.Int, Radix)
+	for index, value := range []byte(Alphabet) {
 		invAlphabet[value] = big.NewInt(int64(index))
 	}
 }
@@ -35,7 +35,7 @@ func (err CorruptInputError) Error() string {
 // DecodeInt returns the big.Int represented by the base58 string s.
 func DecodeInt(s string) (*big.Int, error) {
 	n := new(big.Int)
-	for index, digit := range s {
+	for index, digit := range []byte(s) {
 		n.Mul(n, radixBig)
 		value, ok := invAlphabet[digit]
 		if !ok {
