@@ -26,7 +26,7 @@ func init() {
 	}
 }
 
-type CorruptInputError int
+type CorruptInputError int64
 
 func (err CorruptInputError) Error() string {
 	return fmt.Sprintf("illegal base58 data at input byte %d", err)
