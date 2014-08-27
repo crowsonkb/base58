@@ -7,94 +7,94 @@ import (
 )
 
 func TestEncodeInt(t *testing.T) {
-	in, out := int64((3*58*58)+(2*58)+1), "432"
-	n := big.NewInt(in)
-	result := EncodeInt(n)
-	if result != out {
-		t.Fatalf("result = %v, want %v", result, out)
+	src, want := int64((3*58*58)+(2*58)+1), "432"
+	n := big.NewInt(src)
+	got := EncodeInt(n)
+	if got != want {
+		t.Fatalf("got = %v, want %v", got, want)
 	}
-	if n.Int64() != in {
+	if n.Int64() != src {
 		t.Fatalf("input was altered")
 	}
 }
 
 func TestEncodeIntZero(t *testing.T) {
-	in, out := new(big.Int), ""
-	result := EncodeInt(in)
-	if result != out {
-		t.Fatalf("result = %v, want %v", result, out)
+	src, want := new(big.Int), ""
+	got := EncodeInt(src)
+	if got != want {
+		t.Fatalf("got = %v, want %v", got, want)
 	}
 }
 
 func TestDecodeInt(t *testing.T) {
-	in, out := "432", big.NewInt((3*58*58)+(2*58)+1)
-	result, err := DecodeInt(in)
+	src, want := "432", big.NewInt((3*58*58)+(2*58)+1)
+	got, err := DecodeInt(src)
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
-	if result.Cmp(out) != 0 {
-		t.Fatalf("result = %v, want %v", result, out)
+	if got.Cmp(want) != 0 {
+		t.Fatalf("got = %v, want %v", got, want)
 	}
 }
 
 func TestDecodeIntZero(t *testing.T) {
-	in, out := "", new(big.Int)
-	result, err := DecodeInt(in)
+	src, want := "", new(big.Int)
+	got, err := DecodeInt(src)
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
-	if result.Cmp(out) != 0 {
-		t.Fatalf("result = %v, want %v", result, out)
+	if got.Cmp(want) != 0 {
+		t.Fatalf("got = %v, want %v", got, want)
 	}
 }
 
 func TestDecodeIntBad(t *testing.T) {
-	in, out := "43=2", CorruptInputError(2)
-	_, err := DecodeInt(in)
-	result, ok := err.(CorruptInputError)
+	src, want := "43=2", CorruptInputError(2)
+	_, err := DecodeInt(src)
+	got, ok := err.(CorruptInputError)
 	if !ok {
 		t.Fatalf("Error %v is not a CorruptInputError", err)
 	}
-	if result != out {
-		t.Fatalf("result = %v, want %v", result, out)
+	if got != want {
+		t.Fatalf("got = %v, want %v", got, want)
 	}
 }
 
 func TestEncode(t *testing.T) {
-	in, out := []byte{0, 0, 0, 58}, "11121"
-	result := Encode(in)
-	if result != out {
-		t.Fatalf("result = %v, want %v", result, out)
+	src, want := []byte{0, 0, 0, 58}, "11121"
+	got := Encode(src)
+	if got != want {
+		t.Fatalf("got = %v, want %v", got, want)
 	}
 }
 
 func TestDecode(t *testing.T) {
-	in, out := "11121", []byte{0, 0, 0, 58}
-	result, err := Decode(in)
+	src, want := "11121", []byte{0, 0, 0, 58}
+	got, err := Decode(src)
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
-	if !bytes.Equal(result, out) {
-		t.Fatalf("result = %v, want %v", result, out)
+	if !bytes.Equal(got, want) {
+		t.Fatalf("got = %v, want %v", got, want)
 	}
 }
 
 func TestDecodeBad(t *testing.T) {
-	in, out := "111=1", CorruptInputError(3)
-	_, err := Decode(in)
-	result, ok := err.(CorruptInputError)
+	src, want := "111=1", CorruptInputError(3)
+	_, err := Decode(src)
+	got, ok := err.(CorruptInputError)
 	if !ok {
 		t.Fatalf("Error %v is not a CorruptInputError", err)
 	}
-	if result != out {
-		t.Fatalf("result = %v, want %v", result, out)
+	if got != want {
+		t.Fatalf("got = %v, want %v", got, want)
 	}
 }
 
 func TestMaxEncodedLen(t *testing.T) {
-	in, out := 64, 11
-	result := MaxEncodedLen(in)
-	if result != out {
-		t.Fatalf("result = %v, want %v", result, out)
+	src, want := 64, 11
+	got := MaxEncodedLen(src)
+	if got != want {
+		t.Fatalf("got = %v, want %v", got, want)
 	}
 }
