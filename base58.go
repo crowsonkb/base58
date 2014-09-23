@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math"
 	"math/big"
+	"strings"
 )
 
 // The 58-character encoding alphabet.
@@ -82,11 +83,7 @@ func Encode(src []byte) string {
 		zeros++
 	}
 	n := new(big.Int).SetBytes(src[zeros:])
-	buf := append(make([]byte, zeros), EncodeInt(n)...)
-	for i := 0; i < zeros; i++ {
-		buf[i] = Alphabet[0]
-	}
-	return string(buf)
+	return strings.Repeat(Alphabet[:1], zeros) + EncodeInt(n)
 }
 
 // MaxEncodedLen returns the maximum length in bytes of an encoding of n source
