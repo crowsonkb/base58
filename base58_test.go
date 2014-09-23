@@ -11,7 +11,7 @@ func TestEncodeInt(t *testing.T) {
 	n := big.NewInt(src)
 	got := EncodeInt(n)
 	if got != want {
-		t.Fatalf("got = %v, want %v", got, want)
+		t.Fatalf("got %v, want %v", got, want)
 	}
 	if n.Int64() != src {
 		t.Fatalf("input was altered")
@@ -22,7 +22,7 @@ func TestEncodeIntZero(t *testing.T) {
 	src, want := new(big.Int), ""
 	got := EncodeInt(src)
 	if got != want {
-		t.Fatalf("got = %v, want %v", got, want)
+		t.Fatalf("got %v, want %v", got, want)
 	}
 }
 
@@ -33,7 +33,7 @@ func TestDecodeInt(t *testing.T) {
 		t.Fatalf(err.Error())
 	}
 	if got.Cmp(want) != 0 {
-		t.Fatalf("got = %v, want %v", got, want)
+		t.Fatalf("got %v, want %v", got, want)
 	}
 }
 
@@ -44,7 +44,7 @@ func TestDecodeIntZero(t *testing.T) {
 		t.Fatalf(err.Error())
 	}
 	if got.Cmp(want) != 0 {
-		t.Fatalf("got = %v, want %v", got, want)
+		t.Fatalf("got %v, want %v", got, want)
 	}
 }
 
@@ -56,7 +56,7 @@ func TestDecodeIntBad(t *testing.T) {
 		t.Fatalf("Error %v is not a CorruptInputError", err)
 	}
 	if got != want {
-		t.Fatalf("got = %v, want %v", got, want)
+		t.Fatalf("got %v, want %v", got, want)
 	}
 }
 
@@ -64,7 +64,7 @@ func TestEncode(t *testing.T) {
 	src, want := []byte{0, 0, 0, 58}, "11121"
 	got := Encode(src)
 	if got != want {
-		t.Fatalf("got = %v, want %v", got, want)
+		t.Fatalf("got %v, want %v", got, want)
 	}
 }
 
@@ -72,7 +72,7 @@ func TestEncodeFixedLen(t *testing.T) {
 	src, want := []byte{0, 0, 0, 58}, "111121"
 	got := EncodeFixedLen(src)
 	if got != want {
-		t.Fatalf("got = %v, want %v", got, want)
+		t.Fatalf("got %v, want %v", got, want)
 	}
 }
 
@@ -83,7 +83,7 @@ func TestDecode(t *testing.T) {
 		t.Fatalf(err.Error())
 	}
 	if !bytes.Equal(got, want) {
-		t.Fatalf("got = %v, want %v", got, want)
+		t.Fatalf("got %v, want %v", got, want)
 	}
 }
 
@@ -94,7 +94,7 @@ func TestDecodeFixedLen(t *testing.T) {
 		t.Fatalf(err.Error())
 	}
 	if !bytes.Equal(got, want) {
-		t.Fatalf("got = %v, want %v", got, want)
+		t.Fatalf("got %v, want %v", got, want)
 	}
 }
 
@@ -106,7 +106,7 @@ func TestDecodeBad(t *testing.T) {
 		t.Fatalf("Error %v is not a CorruptInputError", err)
 	}
 	if got != want {
-		t.Fatalf("got = %v, want %v", got, want)
+		t.Fatalf("got %v, want %v", got, want)
 	}
 }
 
@@ -114,6 +114,6 @@ func TestMaxEncodedLen(t *testing.T) {
 	src, want := 64, 11
 	got := MaxEncodedLen(src)
 	if got != want {
-		t.Fatalf("got = %v, want %v", got, want)
+		t.Fatalf("got %v, want %v", got, want)
 	}
 }
