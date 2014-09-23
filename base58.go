@@ -60,13 +60,16 @@ func Decode(s string) ([]byte, error) {
 	return append(make([]byte, zeros), n.Bytes()...), nil
 }
 
+// DecodeFixedLen returns the bytes represented by the string s, where s has
+// been padded with initial '1's to the maximum length of any base58
+// representation of a byte sequence of the same length.
 func DecodeFixedLen(s string) ([]byte, error) {
 	n, err := DecodeInt(s)
 	if err != nil {
 		return nil, err
 	}
 	buf := n.Bytes()
-	zeros := MinDecodedLen(len(s)) - len(buf)
+	zeros := DecodedLen(len(s)) - len(buf)
 	if zeros <= 0 {
 		return buf, nil
 	}
@@ -99,6 +102,8 @@ func Encode(src []byte) string {
 	return strings.Repeat(Alphabet[:1], zeros) + EncodeInt(n)
 }
 
+// EncodeFixedLen encodes src using base58 and pads it with initial '1's to the
+// maximum base58-encoded length of a sequence of len(src) bytes.
 func EncodeFixedLen(src []byte) string {
 	n := new(big.Int).SetBytes(src)
 	buf := []byte(EncodeInt(n))
@@ -106,8 +111,9 @@ func EncodeFixedLen(src []byte) string {
 	return strings.Repeat(Alphabet[:1], zeros) + string(buf)
 }
 
-// TODO: document this
-func MinDecodedLen(n int) int {
+// DecodedLen returns the decoded length in bytes of an n-character base58
+// string with no padding.
+func DecodedLen(n int) int {
 	return int(math.Floor(float64(n) * BitsPerDigit / 8))
 }
 
