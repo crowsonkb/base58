@@ -60,6 +60,19 @@ func Decode(s string) ([]byte, error) {
 	return append(make([]byte, zeros), n.Bytes()...), nil
 }
 
+func DecodeFixedLen(s string) ([]byte, error) {
+	n, err := DecodeInt(s)
+	if err != nil {
+		return nil, err
+	}
+	buf := n.Bytes()
+	zeros := MinDecodedLen(len(s)) - len(buf)
+	if zeros <= 0 {
+		return buf, nil
+	}
+	return append(make([]byte, zeros), buf...), nil
+}
+
 // EncodeInt encodes the big.Int n using base58.
 func EncodeInt(n *big.Int) string {
 	n = new(big.Int).Set(n)
@@ -84,6 +97,18 @@ func Encode(src []byte) string {
 	}
 	n := new(big.Int).SetBytes(src[zeros:])
 	return strings.Repeat(Alphabet[:1], zeros) + EncodeInt(n)
+}
+
+func EncodeFixedLen(src []byte) string {
+	n := new(big.Int).SetBytes(src)
+	buf := []byte(EncodeInt(n))
+	zeros := MaxEncodedLen(len(src)*8) - len(buf)
+	return strings.Repeat(Alphabet[:1], zeros) + string(buf)
+}
+
+// TODO: document this
+func MinDecodedLen(n int) int {
+	return int(math.Floor(float64(n) * BitsPerDigit / 8))
 }
 
 // MaxEncodedLen returns the maximum length in bytes of an encoding of n source
