@@ -68,9 +68,28 @@ func TestEncode(t *testing.T) {
 	}
 }
 
+func TestEncodeFixedLen(t *testing.T) {
+	src, want := []byte{0, 0, 0, 58}, "111121"
+	got := EncodeFixedLen(src)
+	if got != want {
+		t.Fatalf("got = %v, want %v", got, want)
+	}
+}
+
 func TestDecode(t *testing.T) {
 	src, want := "11121", []byte{0, 0, 0, 58}
 	got, err := Decode(src)
+	if err != nil {
+		t.Fatalf(err.Error())
+	}
+	if !bytes.Equal(got, want) {
+		t.Fatalf("got = %v, want %v", got, want)
+	}
+}
+
+func TestDecodeFixedLen(t *testing.T) {
+	src, want := "111121", []byte{0, 0, 0, 58}
+	got, err := DecodeFixedLen(src)
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
