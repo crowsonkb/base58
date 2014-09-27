@@ -44,12 +44,16 @@ func init() {
 		"Hash the input. Valid algorithms: md5, sha1, sha256, sha512")
 }
 
+func exit(v interface{}) {
+	fmt.Fprintln(os.Stderr, v)
+	os.Exit(1)
+}
+
 func main() {
 	flag.Parse()
 
 	if flagDecode && flagHash != "" {
-		fmt.Fprintln(os.Stderr, "invalid combination of options")
-		os.Exit(1)
+		exit("invalid combination of options")
 	}
 
 	encoding := base58.Bitcoin
@@ -60,13 +64,11 @@ func main() {
 	if flagDecode {
 		buf, err := ioutil.ReadAll(os.Stdin)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
+			exit(err)
 		}
 		result, err := encoding.Decode(strings.TrimSpace(string(buf)))
 		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			os.Exit(1)
+			exit(err)
 		}
 		os.Stdout.Write(result)
 		return
@@ -74,8 +76,7 @@ func main() {
 
 	buf, err := ioutil.ReadAll(os.Stdin)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		exit(err)
 	}
 	switch flagHash {
 	case "":
@@ -92,8 +93,7 @@ func main() {
 		arr := sha512.Sum512(buf)
 		buf = arr[:]
 	default:
-		fmt.Fprintln(os.Stderr, "invalid hash algorithm")
-		os.Exit(1)
+		exit("invalid hash algorithm")
 	}
 	result := encoding.Encode(buf)
 	fmt.Println(result)
