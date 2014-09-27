@@ -20,6 +20,28 @@ var BitsPerDigit = math.Log2(float64(Radix))
 var invAlphabet map[byte]*big.Int
 var radixBig = big.NewInt(int64(Radix))
 
+// An Encoding defines a base58 encoding/decoding scheme. The 'Bitcoin' and
+// 'Fixed' encodings differ only in how they pad the encoded string with initial
+// '1's. The Bitcoin encoding is compatible with the Bitcoin address format,
+// which produces variable length output strings given the the same number of
+// input bytes. The Fixed encoding always pads with the maximum number of
+// initial '1's such that the output string is always the same length given the
+// same number of input bytes.
+type Encoding struct {
+	Decode func(string) ([]byte, error)
+	Encode func([]byte) string
+}
+
+// The Bitcoin encoding is compatible with the Bitcoin address format, which
+// produces variable length output strings given the the same number of input
+// bytes.
+var Bitcoin = Encoding{decodeBitcoin, encodeBitcoin}
+
+// The Fixed encoding always pads with the maximum number of initial '1's such
+//that the output string is always the same length given the same number of
+// input bytes.
+var Fixed = Encoding{decodeFixed, encodeFixed}
+
 func init() {
 	invAlphabet = make(map[byte]*big.Int, Radix)
 	for index, value := range []byte(Alphabet) {
@@ -47,8 +69,7 @@ func DecodeInt(s string) (*big.Int, error) {
 	return n, nil
 }
 
-// Decode returns the bytes represented by the base58 string s.
-func Decode(s string) ([]byte, error) {
+func decodeBitcoin(s string) ([]byte, error) {
 	var zeros int
 	for i := 0; i < len(s) && s[i] == Alphabet[0]; i++ {
 		zeros++
@@ -60,10 +81,7 @@ func Decode(s string) ([]byte, error) {
 	return append(make([]byte, zeros), n.Bytes()...), nil
 }
 
-// DecodeFixedLen returns the bytes represented by the string s, where s has
-// been padded with initial '1's to the maximum length of any base58
-// representation of a byte sequence of the same length.
-func DecodeFixedLen(s string) ([]byte, error) {
+func decodeFixed(s string) ([]byte, error) {
 	n, err := DecodeInt(s)
 	if err != nil {
 		return nil, err
@@ -92,8 +110,7 @@ func EncodeInt(n *big.Int) string {
 	return string(bufReverse)
 }
 
-// Encode encodes src using base58.
-func Encode(src []byte) string {
+func encodeBitcoin(src []byte) string {
 	var zeros int
 	for i := 0; i < len(src) && src[i] == 0; i++ {
 		zeros++
@@ -102,9 +119,7 @@ func Encode(src []byte) string {
 	return strings.Repeat(Alphabet[:1], zeros) + EncodeInt(n)
 }
 
-// EncodeFixedLen encodes src using base58 and pads it with initial '1's to the
-// maximum base58-encoded length of a sequence of len(src) bytes.
-func EncodeFixedLen(src []byte) string {
+func encodeFixed(src []byte) string {
 	n := new(big.Int).SetBytes(src)
 	buf := []byte(EncodeInt(n))
 	zeros := MaxEncodedLen(len(src)*8) - len(buf)

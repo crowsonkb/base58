@@ -60,25 +60,25 @@ func TestDecodeIntBad(t *testing.T) {
 	}
 }
 
-func TestEncode(t *testing.T) {
+func TestEncodeBitcoin(t *testing.T) {
 	src, want := []byte{0, 0, 0, 58}, "11121"
-	got := Encode(src)
+	got := Bitcoin.Encode(src)
 	if got != want {
 		t.Fatalf("got %v, want %v", got, want)
 	}
 }
 
-func TestEncodeFixedLen(t *testing.T) {
+func TestEncodeFixed(t *testing.T) {
 	src, want := []byte{0, 0, 0, 58}, "111121"
-	got := EncodeFixedLen(src)
+	got := Fixed.Encode(src)
 	if got != want {
 		t.Fatalf("got %v, want %v", got, want)
 	}
 }
 
-func TestDecode(t *testing.T) {
+func TestDecodeBitcoin(t *testing.T) {
 	src, want := "11121", []byte{0, 0, 0, 58}
-	got, err := Decode(src)
+	got, err := Bitcoin.Decode(src)
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
@@ -87,9 +87,9 @@ func TestDecode(t *testing.T) {
 	}
 }
 
-func TestDecodeFixedLen(t *testing.T) {
+func TestDecodeFixed(t *testing.T) {
 	src, want := "111121", []byte{0, 0, 0, 58}
-	got, err := DecodeFixedLen(src)
+	got, err := Fixed.Decode(src)
 	if err != nil {
 		t.Fatalf(err.Error())
 	}
@@ -100,7 +100,7 @@ func TestDecodeFixedLen(t *testing.T) {
 
 func TestDecodeBad(t *testing.T) {
 	src, want := "111=1", CorruptInputError(3)
-	_, err := Decode(src)
+	_, err := Bitcoin.Decode(src)
 	got, ok := err.(CorruptInputError)
 	if !ok {
 		t.Fatalf("Error %v is not a CorruptInputError", err)

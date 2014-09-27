@@ -38,7 +38,7 @@ func init() {
 
 	flag.BoolVar(&flagDecode, "decode", false,
 		"Read base58 data and output binary data.")
-	flag.BoolVar(&flagFixedPadding, "fixed-padding", false,
+	flag.BoolVar(&flagFixedPadding, "fixed", false,
 		"Use a fixed-length padding scheme instead of the Bitcoin scheme.")
 	flag.StringVar(&flagHash, "hash", "",
 		"Hash the input. Valid algorithms: md5, sha1, sha256, sha512")
@@ -52,9 +52,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	decode, encode := base58.Decode, base58.Encode
+	encoding := base58.Bitcoin
 	if flagFixedPadding {
-		decode, encode = base58.DecodeFixedLen, base58.EncodeFixedLen
+		encoding = base58.Fixed
 	}
 
 	if flagDecode {
@@ -63,7 +63,7 @@ func main() {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
 		}
-		result, err := decode(strings.TrimSpace(string(buf)))
+		result, err := encoding.Decode(strings.TrimSpace(string(buf)))
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err)
 			os.Exit(1)
@@ -95,6 +95,6 @@ func main() {
 		fmt.Fprintln(os.Stderr, "invalid hash algorithm")
 		os.Exit(1)
 	}
-	result := encode(buf)
+	result := encoding.Encode(buf)
 	fmt.Println(result)
 }
