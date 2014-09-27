@@ -61,11 +61,12 @@ func main() {
 		encoding = base58.Fixed
 	}
 
+	buf, err := ioutil.ReadAll(os.Stdin)
+	if err != nil {
+		exit(err)
+	}
+
 	if flagDecode {
-		buf, err := ioutil.ReadAll(os.Stdin)
-		if err != nil {
-			exit(err)
-		}
 		result, err := encoding.Decode(strings.TrimSpace(string(buf)))
 		if err != nil {
 			exit(err)
@@ -74,10 +75,6 @@ func main() {
 		return
 	}
 
-	buf, err := ioutil.ReadAll(os.Stdin)
-	if err != nil {
-		exit(err)
-	}
 	switch flagHash {
 	case "":
 	case "md5":
