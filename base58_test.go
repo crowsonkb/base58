@@ -2,6 +2,7 @@ package base58
 
 import (
 	"bytes"
+	"fmt"
 	"math/big"
 	"testing"
 )
@@ -49,7 +50,7 @@ func TestDecodeIntZero(t *testing.T) {
 }
 
 func TestDecodeIntBad(t *testing.T) {
-	src, want := "43=2", CorruptInputError(2)
+	src, want := "43?2", CorruptInputError(2)
 	_, err := DecodeInt(src)
 	got, ok := err.(CorruptInputError)
 	if !ok {
@@ -99,7 +100,7 @@ func TestDecodeFixed(t *testing.T) {
 }
 
 func TestDecodeBad(t *testing.T) {
-	src, want := "111=1", CorruptInputError(3)
+	src, want := "111?1", CorruptInputError(3)
 	_, err := Bitcoin.Decode(src)
 	got, ok := err.(CorruptInputError)
 	if !ok {
@@ -116,4 +117,46 @@ func TestMaxEncodedLen(t *testing.T) {
 	if got != want {
 		t.Fatalf("got %v, want %v", got, want)
 	}
+}
+
+func ExampleEncoding() {
+	buf := []byte{0, 0, 0, 58}
+
+	enc1 := Bitcoin.Encode(buf)
+	enc2 := Fixed.Encode(buf)
+
+	fmt.Println(enc1, enc2)
+
+	dec1, err := Bitcoin.Decode(enc1)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	dec2, err := Fixed.Decode(enc2)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Println(dec1, dec2)
+	// Output:
+	// 11121 111121
+	// [0 0 0 58] [0 0 0 58]
+}
+
+func ExampleCorruptInputError() {
+	dec, err := Fixed.Decode("1111?1")
+	if err != nil {
+		fmt.Println(err)
+
+		// Recover the location of the bad input byte as an int64
+		if err, ok := err.(CorruptInputError); ok {
+			fmt.Println(int64(err))
+		}
+		return
+	}
+	fmt.Println("Successfully decoded to:", dec)
+	// Output:
+	// illegal base58 data at input byte 4
+	// 4
 }
