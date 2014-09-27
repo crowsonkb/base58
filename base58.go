@@ -111,8 +111,8 @@ func EncodeFixedLen(src []byte) string {
 	return strings.Repeat(Alphabet[:1], zeros) + string(buf)
 }
 
-// DecodedLen returns the decoded length in bytes of an n-character base58
-// string with no padding.
+// DecodedLen returns the decoded length in bytes of an n-digit base58 string
+// with no initial padding.
 func DecodedLen(n int) int {
 	return int(math.Floor(float64(n) * BitsPerDigit / 8))
 }
